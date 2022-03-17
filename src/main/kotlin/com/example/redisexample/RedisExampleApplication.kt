@@ -30,7 +30,7 @@ class RedisExampleApplication {
             .thenMany(geoTemplate.radius(sicily, Circle(Point(13.583333, 37.31667), Distance(10.0, RedisGeoCommands.DistanceUnit.KILOMETERS))))
             .map { it.content.name }
             .doOnNext(::println)
-            .subscribe()
+            .blockLast()
     }
 
     @Bean
@@ -40,10 +40,10 @@ class RedisExampleApplication {
         val push =
             listTemplate.leftPushAll(listName, "Madhura", "Josh", "Stephane", "Dr. Syer", "Yuxin", "Olga", "Violetta")
         push.thenMany(listTemplate.leftPop(listName))
-            .doOnNext { println(it) }
+            .doOnNext(::println)
             .thenMany(listTemplate.leftPop(listName))
-            .doOnNext { println(it) }
-            .subscribe()
+            .doOnNext(::println)
+            .blockLast()
     }
 }
 
