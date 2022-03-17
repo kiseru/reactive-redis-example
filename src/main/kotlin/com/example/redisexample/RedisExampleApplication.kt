@@ -8,7 +8,6 @@ import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.data.geo.Circle
 import org.springframework.data.geo.Distance
 import org.springframework.data.geo.Point
@@ -16,7 +15,6 @@ import org.springframework.data.redis.connection.RedisGeoCommands
 import org.springframework.data.redis.core.*
 
 @SpringBootApplication
-@Configuration
 class RedisExampleApplication {
 
     @Bean
