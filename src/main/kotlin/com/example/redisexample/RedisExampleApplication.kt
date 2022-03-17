@@ -1,5 +1,6 @@
 package com.example.redisexample
 
+import kotlinx.coroutines.runBlocking
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -10,6 +11,8 @@ import org.springframework.data.geo.Distance
 import org.springframework.data.geo.Point
 import org.springframework.data.redis.connection.RedisGeoCommands
 import org.springframework.data.redis.core.ReactiveRedisTemplate
+import org.springframework.data.redis.core.leftPopAndAwait
+import org.springframework.data.redis.core.leftPushAllAndAwait
 import reactor.core.publisher.Flux
 
 @SpringBootApplication
@@ -35,15 +38,13 @@ class RedisExampleApplication {
 
     @Bean
     fun list(template: ReactiveRedisTemplate<String, String>) = ApplicationRunner {
-        val listTemplate = template.opsForList()
-        val listName = "spring-team"
-        val push =
-            listTemplate.leftPushAll(listName, "Madhura", "Josh", "Stephane", "Dr. Syer", "Yuxin", "Olga", "Violetta")
-        push.thenMany(listTemplate.leftPop(listName))
-            .doOnNext(::println)
-            .thenMany(listTemplate.leftPop(listName))
-            .doOnNext(::println)
-            .blockLast()
+        runBlocking {
+            val listTemplate = template.opsForList()
+            val listName = "spring-team"
+            listTemplate.leftPushAllAndAwait(listName, "Madhura", "Josh", "Stephane", "Dr. Syer", "Yuxin", "Olga", "Violetta")
+            println(listTemplate.leftPopAndAwait(listName))
+            println(listTemplate.leftPopAndAwait(listName))
+        }
     }
 }
 
